@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name        Twitch Plays Pokemon Chat Filter
-// @namespace   https://github.com/jpgohlke/twitch-chat-filter
+// @name        Twitch Installs Arch Linux Chat Filter
+// @namespace  https://github.com/walliski/twitch-chat-filter
 // @description Hide input commands from the chat.
 
-// @include     /^https?://(www|beta)\.twitch\.tv\/(twitchplayspokemon(/(chat.*)?)?|chat\/.*channel=twitchplayspokemon.*)$/
+// @include     /^https?://(www|beta)\.twitch\.tv\/(twitchinstallsarchlinux(/(chat.*)?)?|chat\/.*channel=twitchinstallsarchlinux.*)$/
 
-// @version     3.3
+// @version     3.31
 // @updateURL   https://jpgohlke.github.io/twitch-chat-filter/chat_filter.meta.js
 // @downloadURL https://jpgohlke.github.io/twitch-chat-filter/chat_filter.user.js
 // @grant       none
@@ -101,7 +101,7 @@
 if (!window.$) { return; }
 
 var TCF_VERSION = "3.3";
-var TCF_INFO = "TPP Chat Filter version " + TCF_VERSION + " loaded. Please report bugs and suggestions to https://github.com/jpgohlke/twitch-chat-filter";
+var TCF_INFO = "TIAL Chat Filter version " + TCF_VERSION + " loaded. Please report bugs and suggestions to https://github.com/wallisk/twitch-chat-filter";
 
 // ============================
 // Array Helpers
@@ -265,10 +265,8 @@ function get_setting_value(name){
 // Persistence
 // ----------------------------
 
-var STORAGE_KEY = "tpp-chat-filter-settings";
+var STORAGE_KEY = "tial-chat-filter-settings";
 
-var LEGACY_FILTERS_KEY = "tpp-custom-filter-active";
-var LEGACY_PHRASES_KEY = "tpp-custom-filter-phrases";
 
 function get_local_storage_item(key){
     var item = localStorage.getItem(key);
@@ -279,35 +277,12 @@ function set_local_storage_item(key, value){
     localStorage.setItem(key, JSON.stringify(value));
 }
 
-function get_old_saved_settings(){
-    //For compatibility with older versions of the script.
-    
-    var persisted = {};
-    
-    var old_filters = get_local_storage_item(LEGACY_FILTERS_KEY);
-    if(old_filters){
-        forIn(TCF_SETTINGS_MAP, function(name){
-            forEach(["filters", "rewriters", "stylers"], function(category){
-                if(old_filters[category].indexOf(name) >= 0){
-                    persisted[name] = true;
-                }
-            });
-        });
-    }
-    
-    var old_banned_phrases = get_local_storage_item(LEGACY_PHRASES_KEY);
-    if(old_banned_phrases){
-        persisted['TppBanCustomWords'] = true;
-        persisted['TppBannedWords'] = old_banned_phrases;
-    }
-    
-    return persisted;
-}
+
 
 function load_settings(){
     var persisted;
     if(window.localStorage){
-        persisted = get_local_storage_item(STORAGE_KEY) || get_old_saved_settings();
+        persisted = get_local_storage_item(STORAGE_KEY);
     }else{
         persisted = {};
     }
@@ -332,8 +307,6 @@ function save_settings(){
     });
     
     set_local_storage_item(STORAGE_KEY, persisted);
-    localStorage.removeItem(LEGACY_FILTERS_KEY);
-    localStorage.removeItem(LEGACY_PHRASES_KEY);
 }
 
 add_initializer(function(){
@@ -372,11 +345,7 @@ function add_custom_css(parts){
 // Command Filter
 // ---------------------------
 
-var TPP_COMMANDS = [
-    "escape", "backspace", "enter",
-    "space", "tab", "up", "down", "left",
-    "right", "nop", "dot", "slash"
-];
+var TPP_COMMANDS =  ["-","minus","a","A","b","B","c","C","d","D","e","E","f","F","g","G","h","H","i","I","j","J","k","K","l","L","m","M","n","N","o","O","p","P","q","Q","r","R","s","S","t","T","u","U","v","V","w","W","x","X","y","Y","z","Z","0","1","2","3","4","5","6","7","8","9","!","at","#","$","%","^","&","*","(",")","-","_","'","\"","dot",":",";","=",">","<","`","~","slash","?","backslash","[","]","{","}","escape","backspace","enter","space","tab","up","down","left","right","f1","f2","f3","f4","f5","f6","f7","f8","f9","alt-f1","alt-f2","alt-f3","alt-f4","alt-f5","alt-f6","alt-f7","alt-f8","alt-f9","ctrl-a","ctrl-b","ctrl-c","ctrl-d","ctrl-e","ctrl-f","ctrl-g","ctrl-h","ctrl-i","ctrl-j","ctrl-k","ctrl-l","ctrl-m","ctrl-n","ctrl-o","ctrl-p","ctrl-q","ctrl-r","ctrl-s","ctrl-t","ctrl-u","ctrl-v","ctrl-w","ctrl-x","ctrl-y","ctrl-z","nop","system_reset","boot_cd","boot_drive","yes","rm -rf /"];
 
 var EDIT_DISTANCE_TRESHOLD = 2;
 
