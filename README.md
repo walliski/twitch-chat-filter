@@ -1,5 +1,7 @@
 # Twitch installs arch Chat Filter
-Quickly modified TPP chat filter to filter out commands from chat
+Quickly modified TPP chat filter to filter out commands from chat:  
+
+`javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://walliski.github.io/twitch-chat-filter/chat_filter.user.js';})();`
 
 # Twitch.TV Chat Filter
 
