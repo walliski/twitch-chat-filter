@@ -373,11 +373,9 @@ function add_custom_css(parts){
 // ---------------------------
 
 var TPP_COMMANDS = [
-    "left", "right", "up", "down",
-    "start", "select",
-    "a", "b",
-    "l", "r",
-    "democracy", "anarchy", "wait"
+    "escape", "backspace", "enter",
+    "space", "tab", "up", "down", "left",
+    "right", "nop", "dot", "slash"
 ];
 
 var EDIT_DISTANCE_TRESHOLD = 2;
@@ -453,40 +451,6 @@ add_setting({
     message_filter: message_is_command
 });
 
-// ---------------------------
-// Misty meme
-// ---------------------------
-// Score-based filter for "Guys, we need to beat Misty" spam.
-
-var MISTY_SUBSTRINGS = [
-    "misty",
-    "whitney",
-    "milk",
-    "guys",
-    "we have to",
-    "we need to",
-    "beat"
-];
-
-function message_is_misty(message) {
-    var misty_score = 0;
-    forEach(MISTY_SUBSTRINGS, function(s){
-        if(str_contains(message, s)){
-            misty_score++;
-        }
-    });
-    return (misty_score >= 2);
-}
-
-add_setting({
-    name: 'TppFilterMisty',
-    comment: 'Misty meme',
-    longComment : "Guys we need to milk Witney",
-    category: 'filters_category',
-    defaultValue: true,
-    
-    message_filter: message_is_misty
-});
 
 // ---------------------------
 // Hitler drawings
@@ -597,60 +561,6 @@ add_setting({
     message_filter: message_is_too_long
 });
 
-// ---------------------------
-// Pokemon Stadium betting
-// ---------------------------
-// Filter betting commands for the parallel pokemon stadium betting game
-
-function message_is_bet(message){
-    return /^\s*\!/.test(message);
-}
-
-add_setting({
-    name: 'TppFilterBets',
-    comment: "Stadium bets",
-    longComment: "Any message starting with a \"!\". ex.: \"!bet 100 blue\"",
-    category: 'filters_category',
-    defaultValue: true,
-    
-    message_filter: message_is_bet
-});
-
-// ---------------------------
-// Pokemon Stadium bank bot
-// ---------------------------
-// Filter bank bot messages for the parallel pokemon stadium betting game
-
-var logged_in_user_name = null;
-
-add_initializer(function(){
-    if(Twitch){
-        logged_in_user_name = Twitch.user.displayName();
-    }
-});
-
-function message_is_bank_bot(message, from){
-    if(from.toLowerCase() === 'tppbankbot'){
-        if(logged_in_user_name){
-            // Filter messages not mentioning logged in user
-            return message.toLowerCase().indexOf('@'+logged_in_user_name.toLowerCase()) < 0;
-        } else {
-            // Filter all messages
-            return true;
-        }
-    }
-    return false;
-}
-
-add_setting({
-    name: 'TppFilterBankBot',
-    comment: "Stadium bank bot",
-    longComment: "Messages from the bank bot about other players' balances",
-    category: 'filters_category',
-    defaultValue: true,
-    
-    message_filter: message_is_bank_bot
-});
 
 // ---------------------------
 // Copy-paste rewriter

@@ -1,3 +1,6 @@
+# Twitch installs arch Chat Filter
+Quickly modified TPP chat filter to filter out commands from chat
+
 # Twitch.TV Chat Filter
 
 A Javascript userscript to filter chat commands and other spam from the chat on the [Twitch Plays Pokemon stream](http://www.twitch.tv/twitchplayspokemon)
